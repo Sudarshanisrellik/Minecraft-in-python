@@ -1,0 +1,51 @@
+'''
+this is a fun and temporary project for a competition and not for sale.
+
+But if you find this and have copyright issues with it please contact me @ Sudarshansaimohan@gmail.com
+
+To use this code please install ursina with windows shell using 'pip install ursina' command 
+
+or if you are using pycharm install from packages'''
+
+
+
+from ursina import *
+from ursina.prefabs.first_person_controller import FirstPersonController
+
+app = Ursina()
+
+class Grid(Button):
+    def __init__(self, position=(0,0,0)):
+        super().__init__(
+            parent = scene,
+            position = position,
+            model = 'cube',
+            origin_y = .5,
+            texture = 'white_cube',
+            color = color.color(0, 0, random.uniform(.9, 1.0)),
+            highlight_color = color.blue,
+        )
+
+
+    def input(self, key):
+         if self.hovered:
+             if key == 'left mouse down':
+                 grid = Grid(position=self.position + mouse.normal)
+
+             if key == 'right mouse down':
+                 destroy(self)
+
+
+for z in range(32):
+    for x in range(32):
+        grid = Grid(position=(x,0,z))
+
+
+def input(key):
+    if key == 'left mouse down':
+        hit_info = raycast(camera.world_position, camera.forward, distance=5)
+        if hit_info.hit:
+            Grid(position=hit_info.entity.position + hit_info.normal)
+
+player = FirstPersonController()
+app.run()
